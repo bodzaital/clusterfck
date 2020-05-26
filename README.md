@@ -26,10 +26,11 @@ There are 11 commands in clusterfck.
 Looping is basically:
 
 ```c
-while(dataPtr) { }
+int t = dataPtr
+for (i = 0; i < t; i++) { ... }
 ```
 
-The dataPtr (data pointer) is an imaginary source of data which produces numbers and starts out as 0. +/- can manipulate the dataPtr. The interpreter starts out in integer mode, # changes into char mode, which basically reads the numbers as ASCII characters.
+The dataPtr (data pointer) is an imaginary source of data which produces numbers and starts out as 0. +/- can manipulate the dataPtr. The interpreter starts out in integer mode, # changes into char mode (or back), which basically reads the numbers as ASCII characters.
 
 ## Hello World
 
