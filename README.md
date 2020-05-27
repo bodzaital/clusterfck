@@ -4,6 +4,8 @@ Welcome to clusterfck, or, what I call an afternoon well (that's questionable) s
 
 Clusterfck is like brainfuck but actually bad. Why? I don't know, I basically spent a couple of hours in C# and this is the result.
 
+Call the interpreter by `clusterfck.exe file_to_open [ --debug ]`
+
 ## Commands
 
 There are 11 commands in clusterfck.
