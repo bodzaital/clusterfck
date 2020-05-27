@@ -86,4 +86,4 @@ Switch into character mode
 Dump the output buffer onto the screen
 ```
 
-Clusterfck.exe can do debugging. When a "." is reached, it halts and displays the values of dataPtr, charMode, registerPtr, the values of filled registers, and the outputBuffer.
+Clusterfck.exe can do debugging with the `--debug` flag. When a "." is reached, it halts and displays the values of dataPtr, charMode, registerPtr, the values of filled registers, and the outputBuffer.
