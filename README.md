@@ -10,27 +10,23 @@ Call the interpreter by `clusterfck.exe file_to_open [ --debug ]`
 
 There are 11 commands in clusterfck.
 
-| Command | Description                                                                 |
-|---------|-----------------------------------------------------------------------------|
-| +       | Increment the data pointer                                                  |
-| -       | Decrement the data pointer                                                  |
-| >       | Increment the register pointer                                              |
-| <       | Decrement the register pointer                                              |
-| $       | Save the current data into the current register                             |
-| #       | Switch between integer and char modes                                       |
-| Đ       | Load the current register into the current data                             |
-| =       | Read the register into the output buffer and increment the register pointer |
-| _       | Dump the output buffer onto the screen and reset the output buffer          |
-| .       | Set a breakpoint for --debug                                                |
-| (       | Look at the data pointer's value and loop this section that many times      |
-| )       | Loop end marker                                                             |
+| Command | Description                                                                 | Equivalent C#                                    |
+|---------|-----------------------------------------------------------------------------|--------------------------------------------------|
+| +       | Increment the data pointer                                                  | `dataPtr++`                                      |
+| -       | Decrement the data pointer                                                  | `dataPtr--`                                      |
+| >       | Increment the register pointer                                              | `registerPtr++`                                  |
+| <       | Decrement the register pointer                                              | `registerPtr--`                                  |
+| $       | Save the current data into the current register                             | `registers[registerPtr++] = dataPtr`             |
+| #       | Switch between integer and char modes                                       | `charMode = !charMode`                           |
+| Đ       | Load the current register into the current data                             | `dataPtr = registers[registerPtr++]`             |
+| =       | Read the register into the output buffer and increment the register pointer | `outputBuffer += charMode ? (char)registers[registerPtr++] : registers[registerPtr++]` |
+| _       | Dump the output buffer onto the screen and reset the output buffer          | `Console.WriteLine(outputBuffer)`                |
+| .       | Set a breakpoint for --debug                                                |                                                  |
+| (       | Look at the data pointer's value and loop this section that many times      | `int i = dataPtr; for (i = 0; i < t; i++) { ...` |
+| )       | Loop end marker                                                             | `... }`                                          |
+| x       | Reset the dataPtr to 0.                                                     | `dataPtr = 0`                                    |
 
-Looping is basically:
-
-```c
-int t = dataPtr
-for (i = 0; i < t; i++) { ... }
-```
+The dataPtr is an imaginary source of data which produces numbers, starting out at 0.
 
 The dataPtr (data pointer) is an imaginary source of data which produces numbers and starts out as 0. +/- can manipulate the dataPtr. The interpreter starts out in integer mode, # changes into char mode (or back), which basically reads the numbers as ASCII characters.
 
