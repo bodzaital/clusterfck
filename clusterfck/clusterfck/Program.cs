@@ -12,6 +12,8 @@ namespace clusterfck
         static void Main(string[] args)
         {
             Console.WriteLine("The clusterfck interpreter.");
+            Stopwatch s = new Stopwatch();
+            s.Start();
 
             // When debugging with F5, just load a main.cf.
             if (args.Length == 0)
@@ -67,91 +69,66 @@ namespace clusterfck
                     break;
                 }
 
-                if (v == '+')
+                switch (v)
                 {
-                    dataPtr++;
-                }
+                    case '+':
+                        dataPtr++; break;
+                    case '-':
+                        dataPtr--; break;
+                    case '>':
+                        registerPtr++; break;
+                    case '<':
+                        registerPtr--; break;
+                    case '$':
+                        registers[registerPtr++] = dataPtr; break;
+                    case 'Đ':
+                        dataPtr = registers[registerPtr]; break;
+                    case '#':
+                        charMode = !charMode; break;
+                    case '=':
+                        if (charMode)
+                        {
+                            outputBuffer.Append((char)registers[registerPtr++]);
+                        }
+                        else
+                        {
+                            outputBuffer.Append(registers[registerPtr++]);
+                        }
+                        break;
+                    case '_':
+                        Console.WriteLine(outputBuffer);
+                        outputBuffer = new StringBuilder();
+                        break;
+                    case 'x':
+                        dataPtr = 0; break;
+                    case '(':
+                        iterationHandlers.Push(new IterationHandler(dataPtr - 1, programCtr));
+                        break;
+                    case ')':
+                        if (iterationHandlers.Peek().RemainingCount > 0)
+                        {
+                            iterationHandlers.Peek().RemainingCount--;
+                            programCtr = iterationHandlers.Peek().Head;
+                        }
+                        else
+                        {
+                            iterationHandlers.Pop();
+                        }
+                        break;
+                    case '.':
+                        Debugger.WriteLine($"Breakpoint at {programCtr}");
+                        Debugger.Dump(charMode, dataPtr, registerPtr, programCtr, registers, outputBuffer);
+                        Debugger.WriteLine("PAUSED.");
 
-                if (v == '-')
-                {
-                    dataPtr--;
-                }
-
-                if (v == '>')
-                {
-                    registerPtr++;
-                }
-
-                if (v == '<')
-                {
-                    registerPtr--;
-                }
-
-                if (v == '$')
-                {
-                    registers[registerPtr++] = dataPtr;
-                }
-
-                if (v == 'Đ')
-                {
-                    dataPtr = registers[registerPtr];
-                }
-
-                if (v == '#')
-                {
-                    charMode = !charMode;
-                }
-
-                if (v == '=')
-                {
-                    if (charMode)
-                    {
-                        outputBuffer.Append((char)registers[registerPtr++]);
-                    }
-                    else
-                    {
-                        outputBuffer.Append(registers[registerPtr++]);
-                    }
-                }
-
-                if (v == '_')
-                {
-                    Console.WriteLine(outputBuffer);
-                    outputBuffer = new StringBuilder();
-                }
-
-                if (v == 'x')
-                {
-                    dataPtr = 0;
-                }
-
-                if (v == '(')
-                {
-                    iterationHandlers.Push(new IterationHandler(dataPtr - 1, programCtr));
-                }
-
-                if (v == ')')
-                {
-                    if (iterationHandlers.Peek().RemainingCount > 0)
-                    {
-                        iterationHandlers.Peek().RemainingCount--;
-                        programCtr = iterationHandlers.Peek().Head;
-                    }
-                    else
-                    {
-                        iterationHandlers.Pop();
-                    }
-                }
-
-                if (v == '.')
-                {
-                    Debugger.WriteLine($"Breakpoint at {programCtr}");
-                    Debugger.Dump(charMode, dataPtr, registerPtr, programCtr, registers, outputBuffer);
-                    Debugger.WriteLine("PAUSED.");
-
-                    Console.ReadLine();
+                        Console.ReadLine();
+                        break;
+                    default:
+                        break;
                 }
             }
+
+            s.Stop();
+            Console.WriteLine($"Done in {s.ElapsedMilliseconds}ms");
         }
     }
 }
