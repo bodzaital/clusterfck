@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace clusterfck
@@ -11,30 +12,30 @@ namespace clusterfck
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("The clusterfck interpreter.");
-            Stopwatch s = new Stopwatch();
-            s.Start();
-
-            // When debugging with F5, just load a main.cf.
+            // When no arguments are given, assume debugging from Visual Studio: load main.cf in debug mode.
             if (args.Length == 0)
             {
-                args = new string[1] { "main.cf" };
+                args = new string[3] { "main.cf", "--debug", "--vs" };
             }
 
             string file = args[0];
-            bool debugMode = args.Contains("--debug");
+            Debugger.debugMode = args.Contains("--debug");
+            Debugger.vsMode = args.Contains("--vs");
+            Debugger.timeMode = args.Contains("--time");
 
-            if (debugMode)
-            {
-                Debugger.WriteLine($"Debuging {file} - on breakpoint enter to continue.", ConsoleColor.Yellow);
-            }
-
+            Debugger.WriteLine($"Debuging {file} - on breakpoint enter to continue.", ConsoleColor.Yellow);
+            
             if (!File.Exists(file))
             {
-                Debugger.WriteLine($"File {file} does not exist.");
+                Debugger.WriteLine($"File {file} does not exist.", mustDisplay: true);
                 return;
             }
 
+            // Diagnostics from opening the file.
+            Stopwatch s = new Stopwatch();
+            s.Start();
+
+            // Read the source.
             string input;
             using (StreamReader sr = new StreamReader(file))
             {
@@ -42,12 +43,10 @@ namespace clusterfck
             }
 
             // Yeet out the whitespace characters.
-            input = input.Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\t", string.Empty);
+            input = input.Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\t", string.Empty).Replace(" ", string.Empty);
 
-            if (!debugMode)
-            {
-                input = input.Replace(".", string.Empty);
-            }
+            // Yeet out the break points if not in debug mode.
+            input = Debugger.RemoveBreakpoints(input);
 
             bool charMode = false;
 
@@ -55,6 +54,7 @@ namespace clusterfck
             int registerPtr = 0;
 
             int[] registers = new int[32];
+            bool isComment = false;
 
             StringBuilder outputBuffer = new StringBuilder();
             Stack<IterationHandler> iterationHandlers = new Stack<IterationHandler>();
@@ -63,9 +63,20 @@ namespace clusterfck
             {
                 char v = input[programCtr];
 
-                if (!new char[] { '+', '-', '>', '<', '#', '$', 'Đ', '=', '_', '.', '(', ')', 'x' }.Any(x => x == v))
+                if (isComment)
                 {
-                    Debugger.WriteLine($"Unknown symbol {v} at {programCtr}. Terminating.");
+                    if (v != '`')
+                    {
+                        continue;
+                    }
+
+                    isComment = false;
+                    continue;
+                }
+
+                if (!new char[] { '+', '-', '>', '<', '#', '$', 'Đ', '=', '_', '.', '(', ')', 'x', '¤', '`', '÷' }.Any(x => x == v))
+                {
+                    Debugger.WriteLine($"Unknown symbol '{v}' at {programCtr}. Terminating.");
                     break;
                 }
 
@@ -85,24 +96,46 @@ namespace clusterfck
                         dataPtr = registers[registerPtr]; break;
                     case '#':
                         charMode = !charMode; break;
-                    case '=':
+                    case '¤':
+                        string user_input = Console.ReadLine();
                         if (charMode)
                         {
-                            outputBuffer.Append((char)registers[registerPtr++]);
+                            // if in charmode, save every character of the user_input as ascii numbers.
+                            for (int i = 0; i < user_input.Length; i++)
+                            {
+                                registers[registerPtr++] = Encoding.ASCII.GetBytes(user_input)[i];
+                            }
                         }
                         else
                         {
-                            outputBuffer.Append(registers[registerPtr++]);
+                            // try to save the input as number.
+                            if (int.TryParse(user_input, out int user_input_number))
+                            {
+                                registers[registerPtr++] = user_input_number;
+                            }
+                        }
+                        break;
+                    case '=':
+                        if (charMode)
+                        {
+                            outputBuffer.Append((char)registers[registerPtr++ % registers.Length]);
+                        }
+                        else
+                        {
+                            outputBuffer.Append(registers[registerPtr++ % registers.Length]);
                         }
                         break;
                     case '_':
-                        Console.WriteLine(outputBuffer);
+                        Console.Write(outputBuffer);
                         outputBuffer = new StringBuilder();
                         break;
-                    case 'x':
+                    case '÷':
                         dataPtr = 0; break;
+                    case 'x':
+                        registerPtr = 0; break;
                     case '(':
                         iterationHandlers.Push(new IterationHandler(dataPtr - 1, programCtr));
+                        dataPtr = 0;
                         break;
                     case ')':
                         if (iterationHandlers.Peek().RemainingCount > 0)
@@ -122,13 +155,25 @@ namespace clusterfck
 
                         Console.ReadLine();
                         break;
+                    case '`':
+                        isComment = true;
+                        break;
                     default:
                         break;
                 }
             }
 
             s.Stop();
-            Console.WriteLine($"Done in {s.ElapsedMilliseconds}ms");
+
+            if (Debugger.timeMode)
+            {
+                Console.WriteLine($"Done in {s.ElapsedMilliseconds}ms");
+            }
+
+            if (Debugger.vsMode)
+            {
+                Console.ReadLine();
+            }
         }
     }
 }

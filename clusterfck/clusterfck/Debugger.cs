@@ -6,26 +6,37 @@ namespace clusterfck
 {
     public static class Debugger
     {
-        public static void WriteLine(string m, ConsoleColor foregroundColor = ConsoleColor.Red)
+        public static bool debugMode = false;
+        public static bool vsMode = false;
+        public static bool timeMode = false;
+
+        public static void WriteLine(string m, ConsoleColor foregroundColor = ConsoleColor.Red, bool mustDisplay = false)
         {
-            ConsoleColor fg = Console.ForegroundColor;
-            Console.ForegroundColor = foregroundColor;
-            Console.WriteLine(m);
-            Console.ForegroundColor = fg;
+            if (debugMode || mustDisplay)
+            {
+                ConsoleColor fg = Console.ForegroundColor;
+                Console.ForegroundColor = foregroundColor;
+                Console.WriteLine(m);
+                Console.ForegroundColor = fg;
+            }
         }
 
         public static void Dump(bool charMode, int dataPtr, int registerPtr, int programCtr, int[] registers, StringBuilder outputBuffer)
         {
-            Console.WriteLine($"│ {nameof(charMode)}: {charMode}");
-            Console.WriteLine($"│ {nameof(dataPtr)}: {dataPtr}");
-            Console.WriteLine($"│ {nameof(registerPtr)}: {registerPtr}");
-            Console.WriteLine($"│ {nameof(programCtr)}: {programCtr}");
+            if (debugMode)
+            {
+                Console.WriteLine($"│ {nameof(charMode)}: {charMode}");
+                Console.WriteLine($"│ {nameof(dataPtr)}: {dataPtr}");
+                Console.WriteLine($"│ {nameof(registerPtr)}: {registerPtr}");
+                Console.WriteLine($"│ {nameof(programCtr)}: {programCtr}");
+                Console.WriteLine($"│ {string.Join(',', registers)}");
+                Console.WriteLine($"│ {nameof(outputBuffer)}: {outputBuffer}");
+            }
+        }
 
-            StringBuilder s = new StringBuilder();
-
-            Console.WriteLine($"│ {string.Join(',', registers)}");
-
-            Console.WriteLine($"│ {nameof(outputBuffer)}: {outputBuffer}");
+        public static string RemoveBreakpoints(string input)
+        {
+            return debugMode ? input : input.Replace(".", string.Empty);
         }
     }
 }
