@@ -1,6 +1,6 @@
 # Clusterfck
 
-![clusterfck v1.1](https://img.shields.io/badge/clusterfck-v1.1-purple) ![dotnet core v3.1](https://img.shields.io/badge/dotnet_core-3.1-green)
+![clusterfck v1.2](https://img.shields.io/badge/clusterfck-v1.1-purple) ![dotnet core v3.1](https://img.shields.io/badge/dotnet_core-3.1-green)
 
 Welcome to clusterfck, or, what I call an afternoon well spent.
 
