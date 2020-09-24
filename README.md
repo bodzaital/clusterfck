@@ -240,12 +240,79 @@ _
 #++++++++(++++++++++)--$÷++++++(++++++++++)+++++$÷++++++++(++++++++++)---$--------$÷++++++(++++++++++)+++$x=====_x÷+++++++(++++++++++)++$---$+++++++$$+++$÷+++(++++++++++)++$¤÷x++++(++++++++(=))_
 ```
 
+# ClusterASM
+
+ClusterASM is an extension of clusterfck and a bit higher level language that compiles down to clusterfck. The compiler is `clusterfck-precomp`.
+
+### Parameters
+
+`dotnet ./clusterfck-precomp file`
+
+Running this command will load the file and compile it down to clusterfck in a file called `file.cfasm`.
+
+### Commands
+
+Commands in ClusterASM are in the form `CMD PARAM`. Only one command can be on one line. Not all commands have a parameter, or rather, an implicit `VOID` parameter gets added if there is no parameter after a command.
+
+| cf  | cfasm | Description                                                     |
+|-----|-------|-----------------------------------------------------------------|
+| `+` | INC   | Increment the data pointer by its parameter                     |
+| `-` | DEC   | Decrement the data pointer by its parameter                     |
+| `>` | RIG   | Increment the register pointer by its parameter                 |
+| `<` | LEF   | Decrement the register pointer by its parameter                 |
+| `$` | STR   | Store the current data into the current register, no parameter. |
+| `#` | SWT   | Switch between integer and char modes, no parameter.            |
+| `Đ` | LOD   | Load the current register into the current data, no parameter.  |
+| `=` | REA   | Read a number of registers by its parameter.                    |
+| `_` | DMP   | Dump the output to the output buffer, no parameter.             |
+| `.` | BRP   | Set a breakpoint, no parameter.                                 |
+| `(` | LPS   | Loop the code between LPS and LPE by its parameter.             |
+| `)` | LPE   | Loop end marker, no parameter.                                  |
+| `x` | RRG   | Reset the register pointer, no parameter.                       |
+| `÷` | RDT   | Reset the data pointer, no parameter.                           |
+| `¤` | GET   | Gets input from the user, no parameter.                         |
+
+## Examples
+
+### Hello World
+
+Displays the text "Hello World" on the screen.
+
+```clusterasm
+INC 72
+STR
+DEC 3
+STR
+INC 7
+STR
+STR
+INC 3
+STR
+RDT
+INC 32
+STR
+INC 87
+STR
+DEC 8
+STR
+INC 3
+STR
+DEC 6
+STR
+DEC 8
+STR
+RRG
+RDT
+SWT
+REA 32
+DMP
+```
+
+## Recommended file extensions
+
+The `.cf` files should contain raw clusterfck code. The new ClusterASM files should have an extension of `.cfasm`. But really, anything goes. It's all text files.
+
 ## Plans
-
-- Verbose Clusterfck: The same, but more verbose while at the same time, less verbose:
-
-  - `+`: `IncrementDataPtr 1`
-  - `+++`: `IncrementDataPtr 3`
 
 - ClusterShrp: C#-like language that compiles to clusterfck
   - `dataPtr++` compiles to `+`
@@ -256,6 +323,17 @@ _
 ...and many more projects of questionable natures.
 
 ## Changelog
+
+### v1.2
+
+*Repo:*
+
+- Updated readme.
+- Added ClusterASM/`clusterfck-precomp`.
+
+*ClusterASM:*
+
+ClusterASM is an extension of clusterfck that compiles down to clusterfck. Repetitive commands, like `++++++++++` becomes `INC 10`, etc. The compiler for ClusterASM is `clusterfck-precomp`.
 
 ### v1.1
 

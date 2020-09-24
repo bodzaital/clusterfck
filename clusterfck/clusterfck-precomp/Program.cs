@@ -105,9 +105,9 @@ namespace clusterfck_precomp
 
             }
 
-            using StreamWriter sw = new StreamWriter($"{args[0]}.cfasm");
+            using StreamWriter sw = new StreamWriter($"{args[0]}.cf");
             sw.WriteLine(sb.ToString());
-            Console.WriteLine($"Compiled to {args[0]}.cfasm");
+            Console.WriteLine($"Compiled to {args[0]}.cf");
         }
     }
 }
