@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clusterfck", "clusterfck\clusterfck.csproj", "{224D1197-00F5-45B3-9439-BD1CE39E4CDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "clusterfck", "clusterfck\clusterfck.csproj", "{224D1197-00F5-45B3-9439-BD1CE39E4CDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clusterfck-precomp", "clusterfck-precomp\clusterfck-precomp.csproj", "{B7B20009-B258-4F8B-B159-506BF28EA053}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{224D1197-00F5-45B3-9439-BD1CE39E4CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{224D1197-00F5-45B3-9439-BD1CE39E4CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{224D1197-00F5-45B3-9439-BD1CE39E4CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7B20009-B258-4F8B-B159-506BF28EA053}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7B20009-B258-4F8B-B159-506BF28EA053}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7B20009-B258-4F8B-B159-506BF28EA053}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7B20009-B258-4F8B-B159-506BF28EA053}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
