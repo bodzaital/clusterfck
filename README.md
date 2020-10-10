@@ -1,19 +1,14 @@
 # Clusterfck
 
-![clusterfck v1.1](https://img.shields.io/badge/clusterfck-v1.1-purple) ![dotnet core v3.1](https://img.shields.io/badge/dotnet_core-3.1-green)
+![clusterfck v1.2](https://img.shields.io/badge/clusterfck-v1.2-purple) ![dotnet core v3.1](https://img.shields.io/badge/dotnet_core-3.1-green)
 
-Welcome to clusterfck, or, what I call an afternoon well spent.
+Welcome to the clusterfck repo, home of a brainfuck-like language and other related projects (or, what I call an afternoon well spent).
 
-Clusterfck is like brainfuck but stupid.
+## ClusterASM
 
-Call the interpreter by `dotnet ./clusterfck.dll file_to_open [ --debug, --vs, --time ]`
+ClusterASM is an assembly-like extension that compiles down to raw clusterfck.
 
-### Parameters
-
-- `file_to_open`: a clusterfck source file.
-- `--debug`: pause on breakpoints.
-- `--vs`: after finishing, wait for an Enter key before quitting the interpreter.
-- `--time`: display the execution time from opening the source file to finishing.
+## The language
 
 ## Commands
 
@@ -240,7 +235,18 @@ _
 #++++++++(++++++++++)--$÷++++++(++++++++++)+++++$÷++++++++(++++++++++)---$--------$÷++++++(++++++++++)+++$x=====_x÷+++++++(++++++++++)++$---$+++++++$$+++$÷+++(++++++++++)++$¤÷x++++(++++++++(=))_
 ```
 
-# ClusterASM
+## Clusterfck interpreter
+
+Call the interpreter by `dotnet ./clusterfck.dll file_to_open [ --debug, --vs, --time ]`
+
+### Parameters
+
+- `file_to_open`: a clusterfck source file.
+- `--debug`: pause on breakpoints.
+- `--vs`: after finishing, wait for an Enter key before quitting the interpreter.
+- `--time`: display the execution time from opening the source file to finishing.
+
+# ClusterASM compiler
 
 ClusterASM is an extension of clusterfck and a bit higher level language that compiles down to clusterfck. The compiler is `clusterfck-precomp`.
 
